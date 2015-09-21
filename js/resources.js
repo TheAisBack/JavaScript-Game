@@ -8,6 +8,7 @@
     var resourceCache = {};
     var loading = [];
     var readyCallbacks = [];
+
     /* This is the publicly accessible image loading function. It accepts
      * an array of strings pointing to image files or a string for a single
      * image. It will then call our private image loading function accordingly.
@@ -29,6 +30,7 @@
             _load(urlOrArr);
         }
     }
+
     /* This is our private image loader function, it is
      * called by the public image loader function.
      */
@@ -50,6 +52,7 @@
                  * attempts to load this file in the future.
                  */
                 resourceCache[url] = img;
+
                 /* Once the image is actually loaded and properly cached,
                  * call all of the onReady() callbacks we have defined.
                  */
@@ -57,6 +60,7 @@
                     readyCallbacks.forEach(function(func) { func(); });
                 }
             };
+
             /* Set the initial cache value to false, this will change when
              * the image's onload event handler is called. Finally, point
              * the images src attribute to the passed in URL.
@@ -65,6 +69,7 @@
             img.src = url;
         }
     }
+
     /* This is used by developer's to grab references to images they know
      * have been previously loaded. If an image is cached, this functions
      * the same as calling load() on that URL.
@@ -72,6 +77,7 @@
     function get(url) {
         return resourceCache[url];
     }
+
     /* This function determines if all of the images that have been requested
      * for loading have in fact been completed loaded.
      */
@@ -85,12 +91,14 @@
         }
         return ready;
     }
+
     /* This function will add a function to the callback stack that is called
      * when all requested images are properly loaded.
      */
     function onReady(func) {
         readyCallbacks.push(func);
     }
+
     /* This object defines the publicly accessible functions available to
      * developers by creating a global Resources object.
      */

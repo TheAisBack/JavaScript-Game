@@ -1,91 +1,118 @@
-var Enemy = function(x,y) {
-    this.sprite = 'images/enemy-bug.png';
-    this.x = x;
-    this.y = y; 
-    this.speed = (Math.random() * 2) + 1;
-    this.width = 80;
-    this.height = 80;
+var Enemy = function(speed) {
+    this.x = -50;
+    this.speed = speed;
+    this.sprite = 'images/enemy-bug.png';    
+    this.enemyLanes = [60, 143, 225];    
+    this.top = function() {
+        return this.y + 79;
+    };
+    this.right = function() {
+        return this.x + 95;
+    };
+    this.bottom = function() {
+        return this.y + 100;
+    };
+    this.left = function() {
+        return this.x + 7;
+    };
 }
 
 Enemy.prototype.update = function(dt) {
-    this.x += dt * this.speed;
+    this.x += this.speed * dt;
+    if(this.x > 500) {
+        this.x = -100;
+        this.speed = Math.round(Math.random() * 250);
+        while (this.speed < 80) {
+            this.speed = Math.round(Math.random() * 250);
+        }
+        this.y = this.enemyLanes[Math.floor(Math.random()*this.enemyLanes.length)];
+    };
+    if(!(this.top() > player.bottom() ||
+         this.left() > player.right() ||
+         this.bottom() < player.top() ||
+         this.right() < player.left())) {
+      player.death = true;
+    };
 }
 
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 var Player = function (x,y) {
     this.sprite = "images/char-boy.png";
-    this.x = x;
-    this.y = y;
-    this.width = 80;
-    this.height = 80;
-}
+    death = false;
+    this.top = function() {
+        return this.y + 64;
+    };
+    this.right = function() {
+        return this.x + 84;
+    };
+    this.bottom = function() {
+        return this.y + 138;
+    };
+    this.left = function() {
+        return this.x + 17;
+    };
+};
 
-Player.prototype.update = function(dt) {
-}
+Player.prototype.update = function() {
+    if(this.y < 30) {
+        this.death = true;
+    };
+};
 
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+    if(this.death) {
+        this.x = 200;
+        this.y = 380;
+        this.death = false;
+    };
+  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
 
 Player.prototype.handleInput = function(e) {
     switch (e) {
         case "left":
-        if (this.x == 0){ 
-            break; 
-        }
-        this.x -= 80;
-        break;
-        
-        case "up":
-        
-        if(this.y == 100) {
+            if (this.x > 90) { 
+                this.x -= 100; 
+            } 
             break;
-        };
-        this.y -= 80;
-        break;
-        
+
+        case "up":
+            if (this.y > 0) {
+                this.y -= 85;
+            }
+            break;
+
         case "right":
-        if(this.x == 500) { 
-            break; 
-        } 
-        this.x += 80;
-        break;
+            if(this.x < 400) {
+                this.x += 100;
+            }
+            break;
         
         case "down":
-        if(this.y == 600) { 
+            if(this.y + 85 < 400) { 
+                this.y += 85;
+            }
             break;
-        } 
-        this.y += 80;
-        break;
     }
-}
+};
 
 var player = new Player(200,380);
 var allEnemies = [];
 
-function pushEnemies () {
-    var enemy = new Enemy(-80,(80 + (Math.floor((Math.random() * 3)) * 80) )) 
-    allEnemies.push(enemy);
-    
-    if(allEnemies[0].x >= 600) {
-        allEnemies.shift();
-    };
-}
-function checkCollisions() {
-    for(var i=0; i<allEnemies.length; i++)
-    {
-        if (player.x < allEnemies[i].x + allEnemies[i].width 
-        && player.x + player.width  > allEnemies[i].x 
-        && (player.y - allEnemies[i].y) < 10 
-        && (player.y - allEnemies[i].y) >= -10)
-        {
-            reset();
+var pushEnemies = (function () {
+    var newEnemies = 5;
+    for (var i = 0; i < newEnemies; i++) {
+        var speed = 0;
+        while (speed < 85) {
+            var speed = Math.round(Math.random() * 250);
         }
+        allEnemies.push(new Enemy(speed, i));
     }
-}
+});
+
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -95,3 +122,11 @@ document.addEventListener('keyup', function(e) {
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+window.addEventListener("keydown", function(e) {
+    if ([38, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
+
+pushEnemies();
