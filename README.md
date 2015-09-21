@@ -10,4 +10,6 @@ and jump in the ocean.
 When the player jumps in the ocean the game will restart and if the player
 gets hit by the bug the game will also restart.
 
+Have fun and protect yourself!
+
 Good Luck!
