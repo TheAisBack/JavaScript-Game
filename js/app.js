@@ -69,10 +69,10 @@ Player.prototype.update = function() {
 //placing the player on the map when they die and grabbing the image of the player.
 Player.prototype.render = function() {
     if (this.death) {
-        var vertical = 200;
-        var horizontal = 380;
-        this.x = vertical;
-        this.y = horizontal;
+        var horizontal = 200;
+        var vertical = 380;
+        this.x = horizontal;
+        this.y = vertical;
         this.death = false;
     }
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
