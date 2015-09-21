@@ -1,6 +1,13 @@
-frontend-nanodegree-arcade-game
-===============================
+Welcome to Frogger Clone
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+Rules:
 
-for self-checking their submission.
+Move the player to the ocean, so that he can escape the evil bugs.
+
+Using the ‘left’, ‘right’, ‘top’, and ‘down’, move the player to dodge 
+and jump in the ocean.
+
+When the player jumps in the ocean the game will restart and if the player
+gets hit by the bug the game will also restart.
+
+Good Luck!
